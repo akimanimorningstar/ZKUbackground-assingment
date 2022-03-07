@@ -25,7 +25,6 @@ contract Ballot {
     address public chairperson;
 
     mapping(address => Voter) public voters;
-
     Proposal[] public proposals;
 
     /** 
@@ -46,22 +45,25 @@ contract Ballot {
             }));
         }
     }
-    
-    /** 
-     * @dev Give 'voter' the right to vote on this ballot. May only be called by 'chairperson'.
-     * @param voter address of voter
-     */
-    function giveRightToVote(address voter) public {
+
+
+
+
+
+    function giveRightToVote(address[] memory voterData) public {
+
         require(
             msg.sender == chairperson,
             "Only chairperson can give right to vote."
         );
-        require(
-            !voters[voter].voted,
+        for (uint i = 0; i < voterData.length; i++){
+         require(
+            !voters[voterData[uint(i)]].voted,
             "The voter already voted."
         );
-        require(voters[voter].weight == 0);
-        voters[voter].weight = 1;
+        require(voters[voterData[uint(i)]].weight == 0);
+        voters[voterData[uint(i)]].weight = 1;
+        }
     }
 
     /**
@@ -136,3 +138,4 @@ contract Ballot {
         winnerName_ = proposals[winningProposal()].name;
     }
 }
+
